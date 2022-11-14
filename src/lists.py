@@ -25,7 +25,7 @@ class Link(Generic[T]):
 LList = Optional[Link[T]]  # A list is just a reference to the head or None
 
 
-def length(x: LList[T]) -> int:
+def length(x: LList[T], acc = 1) -> int:
     """
     Get the length of x.
 
@@ -36,7 +36,14 @@ def length(x: LList[T]) -> int:
     >>> length(Link(1, Link(2, None)))
     2
     """
-    ...
+    if x is None:
+        return 0
+
+    while x.tail != None:
+        return length(x.tail, acc + 1)
+    return acc
+
+
 
 
 def drop(x: LList[T], k: int) -> LList[T]:
@@ -52,7 +59,12 @@ def drop(x: LList[T], k: int) -> LList[T]:
     >>> drop(Link(1, Link(2, None)), 1)
     Link(2, None)
     """
-    ...
+
+    if x is None or k == 0:
+        return x
+    else:
+        return drop(x.tail, k - 1)
+
 
 
 def take(x: LList[T], k: int) -> LList[T]:
@@ -69,10 +81,16 @@ def take(x: LList[T], k: int) -> LList[T]:
     >>> take(Link(1, Link(2, Link(3, None))), 2)
     Link(1, Link(2, None))
     """
-    ...
+
+    if length(x) < k or k == 0:
+        return drop(x, 1)
+
+    else:
+        return Link(x.head, take(x.tail, k - 1))
 
 
-def reverse(x: LList[T]) -> LList[T]:
+
+def reverse(x: LList[T], acc = None) -> LList[T]:
     """
     Reverse a list.
 
@@ -87,4 +105,7 @@ def reverse(x: LList[T]) -> LList[T]:
     >>> reverse(Link(1, Link(2, Link(3, None))))
     Link(3, Link(2, Link(1, None)))
     """
-    ...
+    if x is None:
+        return acc
+    else:
+        return reverse(x.tail, Link(x.head, acc))
